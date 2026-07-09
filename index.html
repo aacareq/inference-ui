@@ -134,6 +134,7 @@
 <body>
 
 <div class="container">
+    <!-- INPUT CONFIGURATION PANEL -->
     <div class="card config-panel">
         <h2>System Configuration</h2>
         
@@ -155,8 +156,10 @@
         </select>
         <div id="smartRecommendation" class="model-badge">Auto-assigned optimization path active.</div>
 
+        <!-- GENERATIVE UI DYNAMIC FIELDS -->
         <div id="dynamicPromptFields"></div>
 
+        <!-- UNIVERSAL CONTEXT STRATEGY SELECTOR -->
         <h3 style="margin-top: 24px;">Universal Context Strategies</h3>
         <div class="strategy-grid">
             <label class="checkbox-container">
@@ -185,6 +188,7 @@
         <button id="generateBtn">Generate Architecture Package</button>
     </div>
 
+    <!-- LIVE OUTPUT ORCHESTRATION PANEL -->
     <div class="card output-panel" style="display: flex; flex-direction: column;">
         <h2>Engine Outputs</h2>
         
@@ -263,18 +267,21 @@
         };
 
         try {
-            // Target your explicit live Cloudflare Worker endpoint directly
+            // Target your explicit live Cloudflare Worker endpoint directly with safe cross-origin defaults
             const response = await fetch('https://inference-ui-backend.aacareq.workers.dev/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                mode: 'cors', // Explicitly declare cross-origin target routing
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(payload)
             });
 
             const data = await response.json();
             
             if(data.error) {
-                document.getElementById('promptOutput').innerText = "Backend Error: " + data.error;
-                document.getElementById('contextOutput').innerText = "Failed to construct context strategy engine.";
+                document.getElementById('promptOutput').innerText = "Backend Warning:\n\n" + data.error;
+                document.getElementById('contextOutput').innerText = "Review your backend configuration arrays.";
                 return;
             }
 
@@ -282,8 +289,8 @@
             document.getElementById('contextOutput').innerText = data.contextEnvelope;
 
         } catch (err) {
-            document.getElementById('promptOutput').innerText = "Network Error: Could not establish a connection to the backend worker proxy.";
-            document.getElementById('contextOutput').innerText = err.message;
+            document.getElementById('promptOutput').innerText = "Network Error: Could not establish a secure connection to the backend worker proxy.";
+            document.getElementById('contextOutput').innerText = "Technical Details: " + err.message;
         } finally {
             generateBtn.innerText = "Generate Architecture Package";
             generateBtn.disabled = false;
