@@ -125,10 +125,10 @@
             font-size: 0.9rem;
             white-space: pre-wrap;
             overflow-y: auto;
-            max-height: 300px;
+            flex-grow: 1;
+            min-height: 200px;
             margin-bottom: 16px;
         }
-        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -263,8 +263,8 @@
         };
 
         try {
-            // Using relative routing path to map directly to our deployed worker pipeline backend
-            const response = await fetch('/api/generate', {
+            // Target your explicit live Cloudflare Worker endpoint directly
+            const response = await fetch('https://inference-ui-backend.aacareq.workers.dev/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -273,7 +273,8 @@
             const data = await response.json();
             
             if(data.error) {
-                document.getElementById('promptOutput').innerText = "Error: " + data.error;
+                document.getElementById('promptOutput').innerText = "Backend Error: " + data.error;
+                document.getElementById('contextOutput').innerText = "Failed to construct context strategy engine.";
                 return;
             }
 
@@ -281,9 +282,8 @@
             document.getElementById('contextOutput').innerText = data.contextEnvelope;
 
         } catch (err) {
-            // Fallback generation baseline if backend proxy is not configured yet
-            document.getElementById('promptOutput').innerText = `[Local Fallback Pattern]\n\nUsing model structural conventions for: ${payload.model.toUpperCase()}\n\nTask Baseline: ${payload.task}`;
-            document.getElementById('contextOutput').innerText = `[Context Envelope Optimized via Local Layout Engines]\n\nActive Strategy Blocks Injected:\n${Object.keys(payload.strategies).filter(k => payload.strategies[k]).map(s => `- ${s.toUpperCase()}`).join('\n')}`;
+            document.getElementById('promptOutput').innerText = "Network Error: Could not establish a connection to the backend worker proxy.";
+            document.getElementById('contextOutput').innerText = err.message;
         } finally {
             generateBtn.innerText = "Generate Architecture Package";
             generateBtn.disabled = false;
