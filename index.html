@@ -8,14 +8,14 @@
         :root {
             --bg-color: #f5f5f7;
             --canvas-bg: #ffffff;
-            --panel-border: #e5e5ea;
+            --panel-border: #8e8e93; /* Darkened for crisp, immediate visibility */
             --panel-border-focus: #635bff;
             --text-main: #1d1d1f;
-            --text-muted: #86868b;
+            --text-muted: #68686e;
             --stripe-blue: #635bff;
             --stripe-blue-hover: #4b43d3;
             --apple-link: #0066cc;
-            --success: #34c759;
+            --success: #24b47e;
             --card-radius: 14px;
             --input-bg: #fbfbfd;
         }
@@ -40,7 +40,7 @@
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            border-bottom: 1px solid var(--panel-border);
+            border-bottom: 1px solid #d1d1d6;
             padding-bottom: 16px;
         }
 
@@ -78,14 +78,13 @@
 
         .card {
             background: var(--canvas-bg);
-            border: 1px solid var(--panel-border);
+            border: 1px solid #d1d1d6;
             border-radius: var(--card-radius);
             padding: 36px;
             display: flex;
             flex-direction: column;
             gap: 28px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .section-title {
@@ -122,16 +121,15 @@
         textarea, select, input {
             width: 100%;
             background: var(--input-bg);
-            border: 1px solid var(--panel-border);
+            border: 1.5px solid var(--panel-border); /* Slightly thickened and significantly darkened */
             border-radius: 8px;
             color: var(--text-main);
             padding: 14px 16px;
             font-size: 0.95rem;
             font-family: inherit;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s ease;
         }
 
-        /* Fixed the readability issue with dark dropdown backgrounds on some systems */
         select option {
             background: var(--canvas-bg);
             color: var(--text-main);
@@ -141,7 +139,7 @@
             outline: none;
             border-color: var(--panel-border-focus);
             background: var(--canvas-bg);
-            box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.1);
+            box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.15);
         }
 
         .model-selector-wrapper {
@@ -156,7 +154,7 @@
 
         .badge {
             background: rgba(99, 91, 255, 0.06);
-            border: 1px solid rgba(99, 91, 255, 0.15);
+            border: 1.5px solid rgba(99, 91, 255, 0.25);
             color: var(--stripe-blue);
             padding: 12px;
             border-radius: 8px;
@@ -166,7 +164,6 @@
             justify-content: center;
             text-align: center;
             font-weight: 600;
-            animation: fadeIn 0.3s ease;
         }
 
         .adaptive-grid {
@@ -176,8 +173,8 @@
             background: var(--input-bg);
             padding: 24px;
             border-radius: 10px;
-            border: 1px solid var(--panel-border);
-            animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1.5px solid var(--panel-border);
+            animation: slideDown 0.25s ease-out;
         }
 
         @media (min-width: 640px) {
@@ -194,7 +191,7 @@
             display: flex;
             gap: 14px;
             background: var(--canvas-bg);
-            border: 1px solid var(--panel-border);
+            border: 1.5px solid var(--panel-border);
             padding: 16px;
             border-radius: 10px;
             cursor: pointer;
@@ -203,9 +200,8 @@
         }
 
         .checkbox-card:hover {
-            border-color: #c7c7cc;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+            border-color: var(--stripe-blue);
+            background: var(--input-bg);
         }
 
         .checkbox-card input[type="checkbox"] {
@@ -241,7 +237,7 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s ease;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -252,14 +248,12 @@
         button.action-btn:hover {
             background: var(--stripe-blue-hover);
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(99, 91, 255, 0.3);
         }
 
         button.action-btn:disabled {
             background: #e5e5ea;
             color: var(--text-muted);
             cursor: not-allowed;
-            transform: none;
             box-shadow: none;
         }
 
@@ -287,7 +281,7 @@
 
         .copy-btn {
             background: transparent;
-            border: 1px solid var(--panel-border);
+            border: 1px solid #d1d1d6;
             color: var(--apple-link);
             font-size: 0.8rem;
             font-weight: 600;
@@ -299,12 +293,12 @@
 
         .copy-btn:hover {
             background: rgba(0, 102, 204, 0.05);
-            border-color: rgba(0, 102, 204, 0.2);
+            border-color: var(--apple-link);
         }
 
         .output-box {
             background: var(--input-bg);
-            border: 1px solid var(--panel-border);
+            border: 1.5px solid var(--panel-border);
             border-radius: 8px;
             padding: 18px;
             font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, monospace;
@@ -324,7 +318,7 @@
 
         .secondary-btn {
             background: var(--canvas-bg);
-            border: 1px solid var(--panel-border);
+            border: 1.5px solid var(--panel-border);
             color: var(--text-main);
             padding: 10px 20px;
             font-size: 0.85rem;
@@ -335,18 +329,13 @@
         }
 
         .secondary-btn:hover {
-            border-color: #adade3;
+            border-color: var(--stripe-blue);
             background: var(--input-bg);
         }
 
-        /* Micro-interactions and Animation Keyframes */
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-8px); }
+            from { opacity: 0; transform: translateY(-6px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
     </style>
 </head>
@@ -363,7 +352,7 @@
         
         <div class="form-group">
             <label for="taskInput">Core Task Objective</label>
-            <div class="label-desc">Provide your target goal. The selection engine will analyze the input string pattern and automatically match defaults.</div>
+            <div class="label-desc">Provide your target goal. The auto-recommendation engine parses input context on the fly to activate model specific criteria.</div>
             <textarea id="taskInput" rows="4" placeholder="e.g., Parse 500 raw technical CVs, isolate specialized domain architectures, and return clean JSON vectors..."></textarea>
         </div>
 
@@ -430,7 +419,7 @@
             </label>
         </div>
 
-        <label class="checkbox-card" style="border-color: rgba(99, 91, 255, 0.3); background: rgba(99, 91, 255, 0.02);">
+        <label class="checkbox-card" style="border-color: var(--stripe-blue); background: rgba(99, 91, 255, 0.02);">
             <input type="checkbox" id="multiTurnControl" checked>
             <div class="checkbox-text">
                 <strong>Inject Multi-Turn Optimization Control Structures</strong>
@@ -478,7 +467,7 @@
     const dynamicContextFields = document.getElementById('dynamicContextFields');
     const generateBtn = document.getElementById('generateBtn');
 
-    // 1. Task-Aware Sentiment & Model Inference Recommendation
+    // 1. Task-Aware Sentiment & Model Auto-Selection Engine
     taskInput.addEventListener('input', () => {
         const val = taskInput.value.toLowerCase();
         if (!val.trim()) {
@@ -486,7 +475,8 @@
             return;
         }
 
-        if (val.includes('code') || val.includes('program') || val.includes('api') || val.includes('schema')) {
+        // Analyzes strings and mutates dropdown selection state explicitly to fulfill user workflow rules
+        if (val.includes('code') || val.includes('program') || val.includes('api') || val.includes('schema') || val.includes('architect')) {
             smartRec.innerText = "Rec: Claude 3.5 Sonnet (XML Anchor Rule)";
             modelSelect.value = "claude-3.5-sonnet";
         } else if (val.includes('reason') || val.includes('math') || val.includes('logic') || val.includes('proof')) {
@@ -508,7 +498,6 @@
         let promptHtml = '';
         let contextHtml = '';
 
-        // Model-Aware Parameter Parsing
         if (model.startsWith('claude')) {
             promptHtml = `
                 <div class="form-group">
@@ -551,12 +540,11 @@
         } else {
             promptHtml = `
                 <div class="form-group" style="grid-column: span 2;">
-                    <label>Open-Weight System Message Injections</label>
+                    <label>System Message Injections</label>
                     <input type="text" id="p_param_1" value="Enforce absolute adherence to structured Markdown parameters without context leaks.">
                 </div>`;
         }
 
-        // Context Inference Dynamic Fields Selection
         contextHtml = `
             <div class="form-group">
                 <label>Operational Domain Terminology</label>
@@ -572,7 +560,7 @@
     }
 
     modelSelect.addEventListener('change', adaptUI);
-    adaptUI(); // Bootstrap defaults immediately
+    adaptUI();
 
     // 3. Network Transaction Layer
     generateBtn.addEventListener('click', async () => {
@@ -622,7 +610,6 @@
         }
     });
 
-    // Output Management Utilities
     function copyText(id) {
         const text = document.getElementById(id).innerText;
         navigator.clipboard.writeText(text).then(() => {
@@ -633,7 +620,7 @@
             btn.style.color = "var(--success)";
             setTimeout(() => {
                 btn.innerText = baseTxt;
-                btn.style.borderColor = "var(--panel-border)";
+                btn.style.borderColor = "#d1d1d6";
                 btn.style.color = "var(--apple-link)";
             }, 1800);
         });
