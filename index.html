@@ -262,7 +262,6 @@
         };
 
         try {
-            // Re-aligned target string path to hit your active legacy worker route
             const response = await fetch('https://inference-ui-backend.aacareq.workers.dev/api/generate', {
                 method: 'POST',
                 headers: { 
@@ -285,7 +284,7 @@
         } catch (err) {
             document.getElementById('promptOutput').innerText = "Network Error: Browser blocked connection to the edge server.";
             document.getElementById('contextOutput').innerText = `DIAGNOSTIC DATA:\n1. Target URL: https://inference-ui-backend.aacareq.workers.dev/api/generate\n2. Error Message: ${err.message}`;
-        } finaly {
+        } finally {
             generateBtn.innerText = "Generate Architecture Package";
             generateBtn.disabled = false;
         }
