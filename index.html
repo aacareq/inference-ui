@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inference UI - Ultimate Prompt & Context Engine</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --panel-bg: rgba(255, 255, 255, 0.03);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --accent-glow: rgba(0, 102, 255, 0.15);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #2563eb;
+            --accent-hover: #3b82f6;
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .container { grid-template-columns: 1fr 1fr; }
+            .output-panel { position: sticky; top: 16px; height: calc(100vh - 32px); }
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        h1, h2, h3 { margin-bottom: 16px; font-weight: 600; letter-spacing: -0.025em; }
+        label { display: block; margin-top: 14px; margin-bottom: 6px; font-size: 0.875rem; color: var(--text-muted); }
+        
+        textarea, select, input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            color: var(--text-main);
+            padding: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        textarea:focus, select:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .model-badge {
+            display: inline-block;
+            background: var(--accent-glow);
+            border: 1px solid var(--accent);
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.01);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+            cursor: pointer;
+        }
+        .checkbox-container input { width: auto; margin-top: 3px; }
+
+        button {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: background 0.2s ease;
+        }
+        button:hover { background: var(--accent-hover); }
+
+        .output-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 300px;
+            margin-bottom: 16px;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card config-panel">
+        <h2>System Configuration</h2>
+        
+        <label for="taskInput">Describe your core task or goal</label>
+        <textarea id="taskInput" rows="4" placeholder="e.g., Parse 500 tech resumes, extract specialized experience levels, and cross-reference with GitHub metrics..."></textarea>
+
+        <label for="modelSelect">Target Model Topology</label>
+        <select id="modelSelect">
+            <option value="gemini-2.5-pro">Google: Gemini 2.5 Pro</option>
+            <option value="gemini-2.5-flash" selected>Google: Gemini 2.5 Flash</option>
+            <option value="claude-3.5-sonnet">Anthropic: Claude 3.5 Sonnet</option>
+            <option value="claude-3-opus">Anthropic: Claude 3 Opus</option>
+            <option value="gpt-4o">OpenAI: GPT-4o</option>
+            <option value="gpt-4o-mini">OpenAI: GPT-4o-Mini</option>
+            <option value="deepseek-r1">DeepSeek: R1 (Reasoning)</option>
+            <option value="deepseek-v3">DeepSeek: V3 (Base)</option>
+            <option value="llama-3.3-70b">Meta: Llama 3.3 70B</option>
+            <option value="mistral-large">Mistral: Mistral Large</option>
+        </select>
+        <div id="smartRecommendation" class="model-badge">Auto-assigned optimization path active.</div>
+
+        <div id="dynamicPromptFields"></div>
+
+        <h3 style="margin-top: 24px;">Universal Context Strategies</h3>
+        <div class="strategy-grid">
+            <label class="checkbox-container">
+                <input type="checkbox" id="strat-ordering" checked>
+                <div><strong>Context Ordering</strong><br><small>Bury context in mid-window</small></div>
+            </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="strat-compression">
+                <div><strong>Compression</strong><br><small>Condense iterative cycles</small></div>
+            </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="strat-caching" checked>
+                <div><strong>Prompt Caching</strong><br><small>Isolate static structures</small></div>
+            </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="strat-isolation">
+                <div><strong>Context Isolation</strong><br><small>Separate system boundaries</small></div>
+            </label>
+        </div>
+
+        <label class="checkbox-container" style="margin-top: 16px; background: rgba(37,99,235,0.05); border-color: rgba(37,99,235,0.2);">
+            <input type="checkbox" id="multiTurnControl" checked>
+            <div><strong>Multi-Turn Lifecycle Management</strong><br><small>Inject active pruning/token size pruning payload code.</small></div>
+        </label>
+
+        <button id="generateBtn">Generate Architecture Package</button>
+    </div>
+
+    <div class="card output-panel" style="display: flex; flex-direction: column;">
+        <h2>Engine Outputs</h2>
+        
+        <label>Structured Model-Specific Prompt Blueprint</label>
+        <div id="promptOutput" class="output-box">Your generated prompt blueprint will stream or appear here...</div>
+
+        <label>Optimized Context Payload Envelope</label>
+        <div id="contextOutput" class="output-box">Your managed context footprint will appear here...</div>
+    </div>
+</div>
+
+<script>
+    const taskInput = document.getElementById('taskInput');
+    const modelSelect = document.getElementById('modelSelect');
+    const dynamicPromptFields = document.getElementById('dynamicPromptFields');
+    const generateBtn = document.getElementById('generateBtn');
+    
+    // Auto-detect optimal model parameters when task description changes
+    taskInput.addEventListener('input', () => {
+        const val = taskInput.value.toLowerCase();
+        if (val.includes('code') || val.includes('program') || val.includes('parse')) {
+            document.getElementById('smartRecommendation').innerText = "Recommendation: Gemini 2.5 Pro or Claude 3.5 Sonnet (High Structural Recall)";
+        } else if (val.includes('reason') || val.includes('logic') || val.includes('math')) {
+            document.getElementById('smartRecommendation').innerText = "Recommendation: DeepSeek R1 (Deep Reasoning Chain)";
+        } else {
+            document.getElementById('smartRecommendation').innerText = "Recommendation: Gemini 2.5 Flash (Low-Latency / Massive Window)";
+        }
+    });
+
+    // Morph the interface based on the model chosen
+    function adaptUI() {
+        const model = modelSelect.value;
+        let fieldsHtml = '';
+
+        if (model.startsWith('claude')) {
+            fieldsHtml = `
+                <label for="xmlTags">Target XML Anchor Structural Tags (Separated by commas)</label>
+                <input type="text" id="xmlTags" value="source_documents, system_constraints, output_format">
+                <label for="constitutionalFraming">Constitutional or Operational Boundary Framing</label>
+                <textarea id="constitutionalFraming" rows="2">Adhere strictly to dry factual deduction. Avoid conversational filler.</textarea>
+            `;
+        } else if (model.startsWith('gemini')) {
+            fieldsHtml = `
+                <label for="systemInstruction">System Instructions (Injected natively into execution context)</label>
+                <textarea id="systemInstruction" rows="2">You are an advanced agent optimized for high-capacity contextual matching across massive text arrays.</textarea>
+            `;
+        } else {
+            fieldsHtml = `
+                <label for="developerMessage">Developer/System Role Message Array</label>
+                <textarea id="developerMessage" rows="2">The following instructions govern the behavior of the engine and override transactional mutations.</textarea>
+            `;
+        }
+        dynamicPromptFields.innerHTML = fieldsHtml;
+    }
+
+    modelSelect.addEventListener('change', adaptUI);
+    adaptUI(); // Initialize view state
+
+    // Trigger Generation call through the Cloudflare Worker Edge Proxy
+    generateBtn.addEventListener('click', async () => {
+        generateBtn.innerText = "Orchestrating Architecture...";
+        generateBtn.disabled = true;
+
+        const payload = {
+            task: taskInput.value,
+            model: modelSelect.value,
+            strategies: {
+                ordering: document.getElementById('strat-ordering').checked,
+                compression: document.getElementById('strat-compression').checked,
+                caching: document.getElementById('strat-caching').checked,
+                isolation: document.getElementById('strat-isolation').checked
+            },
+            multiTurn: document.getElementById('multiTurnControl').checked,
+            xmlTags: document.getElementById('xmlTags')?.value || '',
+            systemInstruction: document.getElementById('systemInstruction')?.value || document.getElementById('developerMessage')?.value || ''
+        };
+
+        try {
+            // Using relative routing path to map directly to our deployed worker pipeline backend
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            
+            if(data.error) {
+                document.getElementById('promptOutput').innerText = "Error: " + data.error;
+                return;
+            }
+
+            document.getElementById('promptOutput').innerText = data.promptBlueprint;
+            document.getElementById('contextOutput').innerText = data.contextEnvelope;
+
+        } catch (err) {
+            // Fallback generation baseline if backend proxy is not configured yet
+            document.getElementById('promptOutput').innerText = `[Local Fallback Pattern]\n\nUsing model structural conventions for: ${payload.model.toUpperCase()}\n\nTask Baseline: ${payload.task}`;
+            document.getElementById('contextOutput').innerText = `[Context Envelope Optimized via Local Layout Engines]\n\nActive Strategy Blocks Injected:\n${Object.keys(payload.strategies).filter(k => payload.strategies[k]).map(s => `- ${s.toUpperCase()}`).join('\n')}`;
+        } finally {
+            generateBtn.innerText = "Generate Architecture Package";
+            generateBtn.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>
