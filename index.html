@@ -6,18 +6,18 @@
     <title>Universal Prompt & Context Studio</title>
     <style>
         :root {
-            --bg-color: #030303;
-            --panel-bg: rgba(255, 255, 255, 0.02);
-            --panel-border: rgba(255, 255, 255, 0.06);
-            --panel-border-hover: rgba(255, 255, 255, 0.12);
-            --text-main: #f5f5f7;
+            --bg-color: #f5f5f7;
+            --canvas-bg: #ffffff;
+            --panel-border: #e5e5ea;
+            --panel-border-focus: #635bff;
+            --text-main: #1d1d1f;
             --text-muted: #86868b;
             --stripe-blue: #635bff;
-            --stripe-blue-hover: #7a73ff;
-            --apple-link: #2997ff;
-            --success: #00d4b6;
-            --card-radius: 12px;
-            --input-bg: rgba(255, 255, 255, 0.03);
+            --stripe-blue-hover: #4b43d3;
+            --apple-link: #0066cc;
+            --success: #34c759;
+            --card-radius: 14px;
+            --input-bg: #fbfbfd;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,13 +30,13 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 24px;
+            padding: 32px 24px;
         }
 
         header {
             max-width: 1400px;
             width: 100%;
-            margin: 0 auto 32px auto;
+            margin: 0 auto 28px auto;
             display: flex;
             justify-content: space-between;
             align-items: baseline;
@@ -45,16 +45,16 @@
         }
 
         header h1 {
-            font-size: 1.25rem;
-            font-weight: 500;
-            letter-spacing: -0.01em;
+            font-size: 1.35rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
         }
 
         header span {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            font-weight: 500;
         }
 
         .container {
@@ -67,41 +67,34 @@
             flex-grow: 1;
         }
 
-        @media (min-width: 1024px) {
-            .container {
-                grid-template-columns: 1.1fr 0.9fr;
-            }
+        @media (min-width: 1100px) {
+            .container { grid-template-columns: 1.1fr 0.9fr; }
             .output-panel {
                 position: sticky;
-                top: 24px;
-                height: calc(100vh - 110px);
+                top: 32px;
+                height: calc(100vh - 120px);
             }
         }
 
         .card {
-            background: var(--panel-bg);
+            background: var(--canvas-bg);
             border: 1px solid var(--panel-border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border-radius: var(--card-radius);
-            padding: 32px;
+            padding: 36px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
-            transition: border-color 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: var(--panel-border-hover);
+            gap: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .section-title {
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.8rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             color: var(--text-muted);
-            margin-bottom: -8px;
+            margin-bottom: -6px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -114,34 +107,41 @@
         }
 
         label {
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.9rem;
+            font-weight: 600;
             color: var(--text-main);
         }
 
         .label-desc {
             font-size: 0.8rem;
             color: var(--text-muted);
-            margin-top: -4px;
+            margin-top: -3px;
+            line-height: 1.4;
         }
 
         textarea, select, input {
             width: 100%;
             background: var(--input-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 6px;
+            border-radius: 8px;
             color: var(--text-main);
-            padding: 12px 16px;
+            padding: 14px 16px;
             font-size: 0.95rem;
             font-family: inherit;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Fixed the readability issue with dark dropdown backgrounds on some systems */
+        select option {
+            background: var(--canvas-bg);
+            color: var(--text-main);
         }
 
         textarea:focus, select:focus, input:focus {
             outline: none;
-            border-color: rgba(255, 255, 255, 0.25);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border-color: var(--panel-border-focus);
+            background: var(--canvas-bg);
+            box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.1);
         }
 
         .model-selector-wrapper {
@@ -151,31 +151,33 @@
         }
 
         @media (min-width: 640px) {
-            .model-selector-wrapper { grid-template-columns: 2fr 1fr; }
+            .model-selector-wrapper { grid-template-columns: 1.8fr 1.2fr; }
         }
 
         .badge {
-            background: rgba(99, 91, 255, 0.1);
-            border: 1px solid rgba(99, 91, 255, 0.2);
-            color: #a39eff;
+            background: rgba(99, 91, 255, 0.06);
+            border: 1px solid rgba(99, 91, 255, 0.15);
+            color: var(--stripe-blue);
             padding: 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.85rem;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-weight: 500;
+            font-weight: 600;
+            animation: fadeIn 0.3s ease;
         }
 
         .adaptive-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 16px;
-            background: rgba(255, 255, 255, 0.01);
-            padding: 20px;
-            border-radius: 8px;
+            gap: 20px;
+            background: var(--input-bg);
+            padding: 24px;
+            border-radius: 10px;
             border: 1px solid var(--panel-border);
+            animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @media (min-width: 640px) {
@@ -184,30 +186,31 @@
 
         .strategy-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
         }
 
         .checkbox-card {
             display: flex;
-            gap: 12px;
-            background: var(--input-bg);
+            gap: 14px;
+            background: var(--canvas-bg);
             border: 1px solid var(--panel-border);
-            padding: 14px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s ease;
             user-select: none;
         }
 
         .checkbox-card:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.04);
+            border-color: #c7c7cc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.01);
         }
 
         .checkbox-card input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             margin-top: 2px;
             accent-color: var(--stripe-blue);
             cursor: pointer;
@@ -215,17 +218,17 @@
 
         .checkbox-text strong {
             display: block;
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.9rem;
+            font-weight: 600;
             color: var(--text-main);
             margin-bottom: 2px;
         }
 
         .checkbox-text small {
             display: block;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
-            line-height: 1.3;
+            line-height: 1.4;
         }
 
         button.action-btn {
@@ -233,34 +236,37 @@
             background: var(--stripe-blue);
             color: #ffffff;
             border: none;
-            border-radius: 6px;
-            padding: 16px;
-            font-size: 0.95rem;
-            font-weight: 500;
+            border-radius: 8px;
+            padding: 18px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(99, 91, 255, 0.2);
         }
 
         button.action-btn:hover {
             background: var(--stripe-blue-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99, 91, 255, 0.3);
         }
 
         button.action-btn:disabled {
-            background: rgba(255, 255, 255, 0.05);
+            background: #e5e5ea;
             color: var(--text-muted);
             cursor: not-allowed;
+            transform: none;
             box-shadow: none;
         }
 
         .output-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
             flex-grow: 1;
             overflow: hidden;
         }
@@ -268,9 +274,9 @@
         .output-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             flex-grow: 1;
-            min-height: 200px;
+            min-height: 180px;
         }
 
         .output-header {
@@ -280,55 +286,67 @@
         }
 
         .copy-btn {
-            background: none;
-            border: none;
+            background: transparent;
+            border: 1px solid var(--panel-border);
             color: var(--apple-link);
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: background 0.2s;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
 
         .copy-btn:hover {
-            background: rgba(41, 151, 255, 0.1);
+            background: rgba(0, 102, 204, 0.05);
+            border-color: rgba(0, 102, 204, 0.2);
         }
 
         .output-box {
-            background: rgba(0, 0, 0, 0.3);
+            background: var(--input-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 6px;
-            padding: 16px;
+            border-radius: 8px;
+            padding: 18px;
             font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, monospace;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             line-height: 1.5;
             white-space: pre-wrap;
             overflow-y: auto;
             flex-grow: 1;
-            color: #e3e3e6;
+            color: #242426;
         }
 
         .export-row {
             display: flex;
             gap: 12px;
-            margin-top: 8px;
+            margin-top: 4px;
         }
 
         .secondary-btn {
-            background: transparent;
+            background: var(--canvas-bg);
             border: 1px solid var(--panel-border);
             color: var(--text-main);
-            padding: 8px 16px;
-            font-size: 0.8rem;
-            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s ease;
         }
 
         .secondary-btn:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.02);
+            border-color: #adade3;
+            background: var(--input-bg);
+        }
+
+        /* Micro-interactions and Animation Keyframes */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -336,21 +354,21 @@
 
 <header>
     <h1>Universal Prompt & Context Studio</h1>
-    <span>v1.0 Production Matrix</span>
+    <span>System Interface Active</span>
 </header>
 
 <div class="container">
     <div class="card config-panel">
-        <div class="section-title">01. Discovery & Analysis</div>
+        <div class="section-title">01. Intent & Topology Match</div>
         
         <div class="form-group">
-            <label for="taskInput">Core Task or Objective</label>
-            <div class="label-desc">Describe what you are trying to achieve in plain english. Smart inference will parse execution targets.</div>
-            <textarea id="taskInput" rows="4" placeholder="e.g., Parse 500 raw technical CVs, extract exact data structures, and isolate edge-case alignment metrics..."></textarea>
+            <label for="taskInput">Core Task Objective</label>
+            <div class="label-desc">Provide your target goal. The selection engine will analyze the input string pattern and automatically match defaults.</div>
+            <textarea id="taskInput" rows="4" placeholder="e.g., Parse 500 raw technical CVs, isolate specialized domain architectures, and return clean JSON vectors..."></textarea>
         </div>
 
         <div class="form-group">
-            <label for="modelSelect">Target Engine Topology</label>
+            <label for="modelSelect">Target Model Topology</label>
             <div class="model-selector-wrapper">
                 <select id="modelSelect">
                     <option value="gemini-2.5-flash" selected>Google: Gemini 2.5 Flash</option>
@@ -359,20 +377,24 @@
                     <option value="claude-3-opus">Anthropic: Claude 3 Opus</option>
                     <option value="gpt-4o">OpenAI: GPT-4o</option>
                     <option value="gpt-4o-mini">OpenAI: GPT-4o-Mini</option>
-                    <option value="deepseek-r1">DeepSeek: R1 (Reasoning)</option>
-                    <option value="deepseek-v3">DeepSeek: V3 (Base)</option>
+                    <option value="deepseek-r1">DeepSeek: R1 (Reasoning Core)</option>
+                    <option value="deepseek-v3">DeepSeek: V3 (Base Computational Engine)</option>
                     <option value="llama-3.3-70b">Meta: Llama 3.3 70B</option>
                     <option value="mistral-large">Mistral: Mistral Large</option>
+                    <option value="grok-2">xAI: Grok 2</option>
+                    <option value="qwen-2.5-72b">Alibaba: Qwen 2.5 72B</option>
+                    <option value="cohere-command-r">Cohere: Command R+</option>
+                    <option value="perplexity-sonar">Perplexity: Sonar Pro</option>
                 </select>
                 <div id="smartRecommendation" class="badge">Awaiting Input Pattern</div>
             </div>
         </div>
 
-        <div class="section-title">02. Adaptive Prompt Framework</div>
+        <div class="section-title">02. Adaptive Prompt Configuration</div>
         <div id="dynamicPromptFields" class="adaptive-grid">
             </div>
 
-        <div class="section-title">03. Adaptive Context Architecture</div>
+        <div class="section-title">03. Adaptive Context Configuration</div>
         <div id="dynamicContextFields" class="adaptive-grid">
             </div>
 
@@ -382,37 +404,37 @@
                 <input type="checkbox" id="strat-ordering" checked>
                 <div class="checkbox-text">
                     <strong>Context Ordering</strong>
-                    <small>Protects against 'loss in the middle' structural decay.</small>
+                    <small>Mitigates token degradation by shifting key vectors away from the center of the text window.</small>
                 </div>
             </label>
             <label class="checkbox-card">
                 <input type="checkbox" id="strat-compression" checked>
                 <div class="checkbox-text">
                     <strong>Context Compression</strong>
-                    <small>Condenses tokens programmatically by dropping noise.</small>
+                    <small>Drops non-semantic syntax and overhead structures to minimize token windows.</small>
                 </div>
             </label>
             <label class="checkbox-card">
                 <input type="checkbox" id="strat-caching" checked>
                 <div class="checkbox-text">
                     <strong>Prompt Caching</strong>
-                    <small>Isolates heavy background reference data blocks.</small>
+                    <small>Isolates stable background definitions to maximize computational cost-efficiency.</small>
                 </div>
             </label>
             <label class="checkbox-card">
                 <input type="checkbox" id="strat-isolation" checked>
                 <div class="checkbox-text">
                     <strong>Context Isolation</strong>
-                    <small>Defines strict boundary tags between systems.</small>
+                    <small>Enforces system border constraints to completely insulate against prompt injection vectors.</small>
                 </div>
             </label>
         </div>
 
-        <label class="checkbox-card" style="border-color: rgba(99, 91, 255, 0.2); background: rgba(99, 91, 255, 0.02);">
+        <label class="checkbox-card" style="border-color: rgba(99, 91, 255, 0.3); background: rgba(99, 91, 255, 0.02);">
             <input type="checkbox" id="multiTurnControl" checked>
             <div class="checkbox-text">
-                <strong>Inject Multi-Turn Optimization Instructions</strong>
-                <small>Generates runtime parameters for conversation memory, rolling summaries, and pruning boundaries.</small>
+                <strong>Inject Multi-Turn Optimization Control Structures</strong>
+                <small>Appends targeted instructions to manage rolling summaries, conversation pruning boundaries, and snapshot budgets.</small>
             </div>
         </label>
 
@@ -420,30 +442,30 @@
     </div>
 
     <div class="card output-panel">
-        <div class="section-title">Structural Output Artifacts</div>
+        <div class="section-title">Engine Outputs</div>
         
         <div class="output-container">
             <div class="output-wrapper">
                 <div class="output-header">
-                    <label>Engine-Optimized Prompt Blueprint</label>
+                    <label>Optimized Prompt Template Blueprint</label>
                     <button class="copy-btn" onclick="copyText('promptOutput')">Copy Prompt</button>
                 </div>
-                <div id="promptOutput" class="output-box">Your synthesized blueprint package will output here...</div>
+                <div id="promptOutput" class="output-box">Your model-optimized structural blueprints will resolve here...</div>
             </div>
 
             <div class="output-wrapper">
                 <div class="output-header">
-                    <label>Structured Context Envelope</label>
+                    <label>Targeted Context Envelope</label>
                     <button class="copy-btn" onclick="copyText('contextOutput')">Copy Context</button>
                 </div>
-                <div id="contextOutput" class="output-box">Your managed architectural context parameters will output here...</div>
+                <div id="contextOutput" class="output-box">Your engineered reference payload blocks will resolve here...</div>
             </div>
         </div>
 
         <div class="export-row">
-            <button class="secondary-btn" onclick="exportAs('txt')">Export Plain Text</button>
-            <button class="secondary-btn" onclick="exportAs('md')">Export Markdown</button>
-            <button class="secondary-btn" onclick="exportAs('json')">Export JSON Package</button>
+            <button class="secondary-btn" onclick="exportAs('txt')">Plain Text</button>
+            <button class="secondary-btn" onclick="exportAs('md')">Markdown</button>
+            <button class="secondary-btn" onclick="exportAs('json')">JSON Artifact</button>
         </div>
     </div>
 </div>
@@ -456,104 +478,111 @@
     const dynamicContextFields = document.getElementById('dynamicContextFields');
     const generateBtn = document.getElementById('generateBtn');
 
-    // 1. Intelligent Model Recommendation Matrix
+    // 1. Task-Aware Sentiment & Model Inference Recommendation
     taskInput.addEventListener('input', () => {
         const val = taskInput.value.toLowerCase();
         if (!val.trim()) {
             smartRec.innerText = "Awaiting Input Pattern";
-            smartRec.style.borderColor = "rgba(99, 91, 255, 0.2)";
             return;
         }
 
-        if (val.includes('code') || val.includes('program') || val.includes('architect') || val.includes('api')) {
-            smartRec.innerText = "Rec: Claude 3.5 Sonnet / Pro";
+        if (val.includes('code') || val.includes('program') || val.includes('api') || val.includes('schema')) {
+            smartRec.innerText = "Rec: Claude 3.5 Sonnet (XML Anchor Rule)";
             modelSelect.value = "claude-3.5-sonnet";
-        } else if (val.includes('reason') || val.includes('logic') || val.includes('math') || val.includes('proof')) {
-            smartRec.innerText = "Rec: DeepSeek R1 (Chain)";
+        } else if (val.includes('reason') || val.includes('math') || val.includes('logic') || val.includes('proof')) {
+            smartRec.innerText = "Rec: DeepSeek R1 (Deep Latent Chain)";
             modelSelect.value = "deepseek-r1";
-        } else if (val.length > 300 || val.includes('massive') || val.includes('file') || val.includes('dataset')) {
-            smartRec.innerText = "Rec: Gemini 2.5 Pro (2M)";
+        } else if (val.length > 250 || val.includes('dataset') || val.includes('corpus') || val.includes('bulk')) {
+            smartRec.innerText = "Rec: Gemini 2.5 Pro (Massive Context)";
             modelSelect.value = "gemini-2.5-pro";
         } else {
-            smartRec.innerText = "Rec: Gemini 2.5 Flash (Fast)";
+            smartRec.innerText = "Rec: Gemini 2.5 Flash (Frictionless / Fast)";
             modelSelect.value = "gemini-2.5-flash";
         }
         adaptUI();
     });
 
-    // 2. Progressive Disclosure & Model-Aware UI Mapping
+    // 2. Animated Progressive Disclosure Core Engine
     function adaptUI() {
         const model = modelSelect.value;
         let promptHtml = '';
         let contextHtml = '';
 
-        // Dynamic Prompt Mutation
+        // Model-Aware Parameter Parsing
         if (model.startsWith('claude')) {
             promptHtml = `
-                <div class="form-group" style="grid-column: span 2;">
-                    <label>Target XML Anchor System Tags</label>
+                <div class="form-group">
+                    <label>Structural XML Target Anchors</label>
                     <input type="text" id="p_param_1" value="source_materials, system_constraints, operational_rules">
                 </div>
-                <div class="form-group" style="grid-column: span 2;">
-                    <label>Constitutional System Framing Directives</label>
-                    <input type="text" id="p_param_2" value="Adhere strictly to dry factual verification. Reject meta-commentary loops.">
+                <div class="form-group">
+                    <label>Constitutional Framing Directives</label>
+                    <input type="text" id="p_param_2" value="Factual, dry execution. Strictly eliminate conversational boilerplate.">
                 </div>`;
         } else if (model.startsWith('deepseek-r1')) {
             promptHtml = `
                 <div class="form-group">
-                    <label>Explicit Reasoning Depth Profile</label>
+                    <label>Reasoning Search Depth</label>
                     <select id="p_param_1">
                         <option value="exhaustive">Exhaustive Latent Search</option>
-                        <option value="targeted">Targeted Logic Validation</option>
+                        <option value="targeted">Targeted Step Validation</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Formatting Anchor Convention</label>
-                    <input type="text" id="p_param_2" value="&lt;thinking&gt; separation barriers">
+                    <label>Barrier Guardrail Format</label>
+                    <input type="text" id="p_param_2" value="Force explicit &lt;thinking&gt; separation tags">
                 </div>`;
         } else if (model.startsWith('gemini')) {
             promptHtml = `
                 <div class="form-group" style="grid-column: span 2;">
-                    <label>System Instruction Execution Block</label>
-                    <input type="text" id="p_param_1" value="You are operating as an advanced agent optimized for high-density token recall matrices.">
+                    <label>Native System Execution Block Instructions</label>
+                    <input type="text" id="p_param_1" value="Operate purely as a low-latency multi-turn semantic structural parser.">
+                </div>`;
+        } else if (model.startsWith('gpt')) {
+            promptHtml = `
+                <div class="form-group">
+                    <label>Developer Array Role Baseline</label>
+                    <input type="text" id="p_param_1" value="System Persona: High-fidelity transactional code parser.">
+                </div>
+                <div class="form-group">
+                    <label>Temperature Threshold Guardrail</label>
+                    <input type="text" id="p_param_2" value="0.10 (Deterministic Matching)">
                 </div>`;
         } else {
             promptHtml = `
-                <div class="form-group">
-                    <label>Developer Message Array Baseline</label>
-                    <input type="text" id="p_param_1" value="System Override Persona Alpha">
-                </div>
-                <div class="form-group">
-                    <label>Temperature Guidance Guardrails</label>
-                    <input type="text" id="p_param_2" value="0.15 (High Predictability)">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Open-Weight System Message Injections</label>
+                    <input type="text" id="p_param_1" value="Enforce absolute adherence to structured Markdown parameters without context leaks.">
                 </div>`;
         }
 
-        // Dynamic Context Mutation (Common Fields tailored implicitly to task complexity)
+        // Context Inference Dynamic Fields Selection
         contextHtml = `
             <div class="form-group">
-                <label>Reference Material Type</label>
-                <input type="text" id="c_param_1" placeholder="e.g., Markdown Docs, Database Schema Strings">
+                <label>Operational Domain Terminology</label>
+                <input type="text" id="c_param_1" placeholder="e.g., Enterprise SaaS metrics, legal constraints">
             </div>
             <div class="form-group">
-                <label>Operational Domain Terminology</label>
-                <input type="text" id="c_param_2" placeholder="e.g., High-throughput SaaS parameters">
+                <label>Reference Material Type / Bounds</label>
+                <input type="text" id="c_param_2" placeholder="e.g., Raw source JSON schemas, unformatted strings">
             </div>`;
 
-        dynamicPromptFields.innerHTML = promptHtml || `<div>Default Model Mapping Loaded.</div>`;
+        dynamicPromptFields.innerHTML = promptHtml;
         dynamicContextFields.innerHTML = contextHtml;
     }
 
     modelSelect.addEventListener('change', adaptUI);
-    adaptUI(); // Core Bootstrap
+    adaptUI(); // Bootstrap defaults immediately
 
-    // 3. Execution Pipeline Interface Handler
+    // 3. Network Transaction Layer
     generateBtn.addEventListener('click', async () => {
+        document.getElementById('promptOutput').innerText = "Connecting to pipeline edge router...";
+        document.getElementById('contextOutput').innerText = "Synthesizing token optimization envelopes...";
         generateBtn.innerText = "Synthesizing Core Arrays...";
         generateBtn.disabled = true;
 
         const payload = {
-            task: taskInput.value || "Generic automation task configuration.",
+            task: taskInput.value || "Default procedural mapping configuration execution.",
             model: modelSelect.value,
             strategies: {
                 ordering: document.getElementById('strat-ordering').checked,
@@ -567,7 +596,6 @@
         };
 
         try {
-            // Straight proxy pass directly to your functional live Cloudflare Worker pipeline endpoint
             const response = await fetch('https://inference-ui-backend.aacareq.workers.dev/api/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -577,7 +605,8 @@
             const data = await response.json();
             
             if (data.error) {
-                document.getElementById('promptOutput').innerText = "Backend System Trace Alert:\n\n" + data.error;
+                document.getElementById('promptOutput').innerText = "System Trace Diagnostics Block:\n\n" + data.error;
+                document.getElementById('contextOutput').innerText = "Verify key-pair configuration binds inside your backend parameters.";
                 return;
             }
 
@@ -585,48 +614,50 @@
             document.getElementById('contextOutput').innerText = data.contextEnvelope;
 
         } catch (err) {
-            document.getElementById('promptOutput').innerText = "Edge Routing Interface Alert: Fetch parameter pipeline broken.";
-            document.getElementById('contextOutput').innerText = err.message;
+            document.getElementById('promptOutput').innerText = "Edge Transaction Fault: Pipeline structural mismatch.";
+            document.getElementById('contextOutput').innerText = `DIAGNOSTIC BLOCK:\n1. Target Path: /api/generate\n2. Message: ${err.message}`;
         } finally {
             generateBtn.innerText = "Synthesize Architectural Package";
             generateBtn.disabled = false;
         }
     });
 
-    // Utility Component Functions
-    function copyText(elementId) {
-        const text = document.getElementById(elementId).innerText;
+    // Output Management Utilities
+    function copyText(id) {
+        const text = document.getElementById(id).innerText;
         navigator.clipboard.writeText(text).then(() => {
-            const btn = document.querySelector(`[onclick="copyText('${elementId}')"]`);
-            const fallbackText = btn.innerText;
+            const btn = document.querySelector(`[onclick="copyText('${id}')"]`);
+            const baseTxt = btn.innerText;
             btn.innerText = "Copied ✓";
+            btn.style.borderColor = "var(--success)";
             btn.style.color = "var(--success)";
             setTimeout(() => {
-                btn.innerText = fallbackText;
+                btn.innerText = baseTxt;
+                btn.style.borderColor = "var(--panel-border)";
                 btn.style.color = "var(--apple-link)";
-            }, 2000);
+            }, 1800);
         });
     }
 
     function exportAs(format) {
-        const promptText = document.getElementById('promptOutput').innerText;
-        const contextText = document.getElementById('contextOutput').innerText;
-        let content = '', filename = `architecture-package.${format}`, mimeType = 'text/plain';
+        const p = document.getElementById('promptOutput').innerText;
+        const c = document.getElementById('contextOutput').innerText;
+        let body = '', name = `prompt-context-package.${format}`, type = 'text/plain';
 
         if (format === 'json') {
-            content = JSON.stringify({ prompt: promptText, context: contextText }, null, 2);
-            mimeType = 'application/json';
+            body = JSON.stringify({ optimizedPrompt: p, optimizedContext: c, metadata: { timestamp: new Date().toISOString(), modelTarget: modelSelect.value } }, null, 2);
+            type = 'application/json';
         } else if (format === 'md') {
-            content = `# System Architecture Package\n\n## Prompt Blueprint\n\`\`\`\n${promptText}\n\`\`\`\n\n## Context Envelope\n\`\`\`\n${contextText}\n\`\`\``;
+            body = `# Universal Prompt & Context Blueprint\n\n## Target Topology: ${modelSelect.value}\n\n### Prompt Frame\n\`\`\`text\n${p}\n\`\`\`\n\n### Context Layer Envelope\n\`\`\`text\n${c}\n\`\`\``;
         } else {
-            content = `PROMPT BLUEPRINT:\n${promptText}\n\n=================================\n\nCONTEXT ENVELOPE:\n${contextText}`;
+            body = `TARGET MODEL TOPOLOGY: ${modelSelect.value}\n\nPROMPT BLUEPRINT ARTIFACT:\n${p}\n\nCONTEXT ENVELOPE ARTIFACT:\n${c}`;
         }
 
-        const blob = new Blob([content], { type: mimeType });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = filename;
-        a.click();
+        const blob = new Blob([body], { type: type });
+        const trigger = document.createElement('a');
+        trigger.href = URL.createObjectURL(blob);
+        trigger.download = name;
+        trigger.click();
     }
 </script>
 </body>
